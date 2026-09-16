@@ -1,0 +1,52 @@
+﻿@model List<SurgiTech.Models.SurgicalInstrument>
+@{
+    ViewData["Title"] = "Instrument Catalog";
+    Layout = "_ShopLayout";
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+    var selectedCategory = ViewBag.SelectedCategory as string;
+}
+
+<section class="catalog-section">
+    <div class="container">
+        <div class="panel-head">
+            <h2>Instrument catalog</h2>
+            <div class="pill-group">
+                <a asp-action="Index" class="pill @(string.IsNullOrEmpty(selectedCategory) ? "active" : "")">All</a>
+                @foreach (var cat in categories)
+                {
+                    <a asp-action="Index" asp-route-category="@cat" class="pill @(selectedCategory == cat ? "active" : "")">@cat</a>
+                }
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <p class="empty-state">No instruments found in this category.</p>
+        }
+        else
+        {
+            <div class="catalog-grid">
+                @foreach (var item in Model)
+                {
+                    <article class="product-card">
+                        <span class="category-tag">@item.Category</span>
+                        <h3>@item.Name</h3>
+                        <p class="desc">@item.MaterialGrade</p>
+                        <div class="product-footer">
+                            <div>
+                                <div class="product-price">@item.UnitPrice.ToString("C")</div>
+                                <div class="product-stock">@item.StockQuantity.ToString("N0") pcs in stock</div>
+                            </div>
+                        </div>
+                        <form asp-action="AddToCart" method="post" class="add-to-cart-form">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="number" name="quantity" value="1" min="1" class="qty-input" />
+                            <button type="submit" class="add-to-cart-btn">Add to cart</button>
+                        </form>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>

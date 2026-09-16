@@ -1,0 +1,52 @@
+﻿@model List<SurgiTech.Models.Order>
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "_ShopLayout";
+    var hospitalName = ViewBag.HospitalName as string;
+}
+
+<section class="catalog-section">
+    <div class="container">
+        <div class="panel-head">
+            <h2>Order history</h2>
+        </div>
+
+        <form asp-action="MyOrders" method="get" class="search-form">
+            <input type="text" name="hospitalName" value="@hospitalName" placeholder="Enter your hospital or clinic name" class="text-input" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        @if (string.IsNullOrWhiteSpace(hospitalName))
+        {
+            <p class="empty-state">Enter your hospital name above to see your orders.</p>
+        }
+        else if (!Model.Any())
+        {
+            <p class="empty-state">No orders found for "@hospitalName".</p>
+        }
+        else
+        {
+            <div class="orders-list">
+                @foreach (var order in Model)
+                {
+                    var badgeClass = order.Status switch
+                    {
+                        "Shipped" or "Delivered" => "badge-ok",
+                        "Processing" => "badge-warn",
+                        _ => "badge-info"
+                    };
+                    <div class="order-card">
+                        <div>
+                            <div class="order-id">#@order.Id</div>
+                            <div class="order-title">@order.HospitalName</div>
+                            <div class="order-meta">Placed @order.OrderDate.ToString("MMM d, yyyy")</div>
+                        </div>
+                        <span class="badge @badgeClass">@order.Status</span>
+                        <div class="order-amount">@order.TotalAmount.ToString("C")</div>
+                        <a asp-action="Track" asp-route-id="@order.Id" class="see-all">Track</a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

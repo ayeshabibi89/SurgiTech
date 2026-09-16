@@ -1,0 +1,93 @@
+﻿@model List<SurgiTech.Models.SurgicalInstrument>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory - SurgiTech Admin</title>
+    <link rel="stylesheet" href="~/css/dashboard.css">
+    <link rel="stylesheet" href="~/css/admin-extra.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i data-lucide="scissors"></i>
+                <span>SurgiTech</span>
+            </div>
+
+            <nav class="nav-menu">
+                <a asp-controller="Admin" asp-action="Dashboard" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a asp-controller="Admin" asp-action="Inventory" class="nav-item active"><i data-lucide="box"></i> Inventory</a>
+                <a asp-controller="Admin" asp-action="Orders" class="nav-item"><i data-lucide="shopping-cart"></i> Orders</a>
+                <a asp-controller="Shop" asp-action="Index" class="nav-item"><i data-lucide="store"></i> Client Shop</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="user-greeting">
+                    <h1>Inventory</h1>
+                    <p>Edit stock levels, pricing and details for every instrument</p>
+                </div>
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <span>Admin User</span>
+                    </div>
+                </div>
+            </header>
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="mgmt-flash">@TempData["Message"]</div>
+            }
+
+            <div class="mgmt-header">
+                <h2>@Model.Count instruments</h2>
+            </div>
+
+            <div class="mgmt-table-wrap">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Material</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Category</td>
+                                <td>@item.MaterialGrade</td>
+                                <td>@item.UnitPrice.ToString("C")</td>
+                                <td>@item.StockQuantity.ToString("N0") pcs</td>
+                                <td class="mgmt-actions">
+                                    <a asp-action="EditInstrument" asp-route-id="@item.Id" class="btn-edit">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

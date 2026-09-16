@@ -1,0 +1,149 @@
+﻿@model SurgiTech.Models.DashboardViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SurgiTech</title>
+    <link rel="stylesheet" href="~/css/dashboard.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i data-lucide="scissors"></i>
+                <span>SurgiTech</span>
+            </div>
+
+            <nav class="nav-menu">
+                <a asp-controller="Admin" asp-action="Dashboard" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a asp-controller="Admin" asp-action="Inventory" class="nav-item"><i data-lucide="box"></i> Inventory</a>
+                <a asp-controller="Admin" asp-action="Orders" class="nav-item"><i data-lucide="shopping-cart"></i> Orders</a>
+                <a asp-controller="Shop" asp-action="Index" class="nav-item"><i data-lucide="store"></i> Client Shop</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+                <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="nav-item" style="width:100%; border:none; background:none; cursor:pointer;">
+                        <i data-lucide="log-out"></i> Log out
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="user-greeting">
+                    <h1>Welcome, @ViewBag.DisplayName</h1>
+                    <p>Here's your surgical inventory and distribution overview</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i data-lucide="search"></i>
+                        <input type="text" placeholder="Search instruments...">
+                    </div>
+                    <div class="user-profile">
+                        <span>Admin User</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="tab-pills">
+                <button class="pill active">Inventory</button>
+                <button class="pill">Orders</button>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- CARD 1: DYNAMIC TOTAL STOCK -->
+                <div class="card metric-card">
+                    <div class="card-header">
+                        <span>Total Surgical Stock</span>
+                        <span class="badge">Live DB</span>
+                    </div>
+                    <div class="metric-value">@Model.TotalStockCount.ToString("N0") <small>pcs</small></div>
+                    <p class="sub-text">Across @Model.TotalCategories Categories</p>
+
+                    <div class="promo-banner">
+                        <div>
+                            <h4>Quality Audit Alert</h4>
+                            <p>Batch #402 ready for ISO Sterilization Audit</p>
+                        </div>
+                        <button class="btn-primary">View Report</button>
+                    </div>
+                </div>
+
+                <!-- CARD 2: DYNAMIC TOP INSTRUMENTS -->
+                <div class="card watchlist-card">
+                    <div class="card-header">
+                        <h3>Top Instrument Categories</h3>
+                    </div>
+                    <ul class="item-list">
+                        @foreach (var item in Model.TopInstruments)
+                        {
+                            <li class="item">
+                                <div class="item-info">
+                                    <strong>@item.Name</strong>
+                                    <small>@item.MaterialGrade</small>
+                                </div>
+                                <div class="item-value">@item.StockQuantity.ToString("N0") pcs</div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <!-- CARD 3: DYNAMIC RECENT ORDERS -->
+                <div class="card orders-card">
+                    <div class="card-header">
+                        <h3>Recent Shipments</h3>
+                    </div>
+                    <div class="orders-grid">
+                        @foreach (var order in Model.RecentOrders)
+                        {
+                            <div class="order-box">
+                                <span class="order-id">#ORD-@order.Id</span>
+                                <p>@order.HospitalName</p>
+                                <strong>$@order.TotalAmount.ToString("N2")</strong>
+                                <span class="status @order.Status.ToLower()">@order.Status</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- CARD 4: CHART AREA -->
+                <div class="card analytics-card">
+                    <div class="card-header">
+                        <h3>Monthly Distribution Analytics</h3>
+                    </div>
+                    <div class="chart-placeholder">
+                        <svg viewBox="0 0 500 120" preserveAspectRatio="none" class="chart-svg">
+                            <defs>
+                                <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#9d4edd" stop-opacity="0.4" />
+                                    <stop offset="100%" stop-color="#9d4edd" stop-opacity="0.0" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,80 Q 70,20 140,60 T 280,30 T 420,90 T 500,20 L 500,120 L 0,120 Z" fill="url(#gradient)" />
+                            <path d="M0,80 Q 70,20 140,60 T 280,30 T 420,90 T 500,20" fill="none" stroke="#a855f7" stroke-width="3" />
+                        </svg>
+                    </div>
+                    <div class="chart-months">
+                        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

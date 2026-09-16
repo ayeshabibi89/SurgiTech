@@ -1,0 +1,29 @@
+﻿@model SurgiTech.Models.SurgicalInstrument
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "_ShopLayout";
+}
+
+<section class="catalog-section">
+    <div class="container details-layout">
+        <div class="details-image">
+            <img src="@Model.ImageUrl" alt="@Model.Name" onerror="this.src='/images/default-instrument.jpg'" />
+        </div>
+        <div class="details-info">
+            <span class="category-tag">@Model.Category</span>
+            <h1>@Model.Name</h1>
+            <p class="desc">@Model.MaterialGrade</p>
+            <div class="product-price large">@Model.UnitPrice.ToString("C")</div>
+            <div class="product-stock">@Model.StockQuantity.ToString("N0") pcs in stock</div>
+
+            <form asp-action="AddToCart" method="post" class="add-to-cart-form details-form">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="number" name="quantity" value="1" min="1" class="qty-input" />
+                <button type="submit" class="add-to-cart-btn">Add to cart</button>
+            </form>
+
+            <a asp-action="Index" class="see-all">&larr; Back to catalog</a>
+        </div>
+    </div>
+</section>

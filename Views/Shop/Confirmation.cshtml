@@ -1,0 +1,26 @@
+﻿@model SurgiTech.Models.Order
+@{
+    ViewData["Title"] = "Order Confirmed";
+    Layout = "_ShopLayout";
+}
+
+<section class="catalog-section">
+    <div class="container">
+        <div class="confirmation-box">
+            <span class="badge badge-ok">Order placed</span>
+            <h1>Thanks — order #@Model.Id is in.</h1>
+            <p>We've marked it <strong>@Model.Status</strong> for @Model.HospitalName. You'll be able to track it any time.</p>
+
+            <div class="confirmation-meta">
+                <div><span>Order number</span><strong>#@Model.Id</strong></div>
+                <div><span>Placed</span><strong>@Model.OrderDate.ToString("MMM d, yyyy")</strong></div>
+                <div><span>Total</span><strong>@Model.TotalAmount.ToString("C")</strong></div>
+            </div>
+
+            <div class="confirmation-actions">
+                <a asp-action="Track" asp-route-id="@Model.Id" class="btn btn-primary">Track this order</a>
+                <a asp-action="Index" class="btn btn-ghost">Continue browsing</a>
+            </div>
+        </div>
+    </div>
+</section>

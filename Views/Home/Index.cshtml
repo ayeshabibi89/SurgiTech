@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    Layout = "_ShopLayout";
+}
+
+<section class="hero">
+    <div class="container hero-row">
+        <div class="hero-copy">
+            <h1>Sterile instruments, delivered on a surgical schedule.</h1>
+            <p class="hero-lead">
+                SurgiTech supplies hospitals and surgical centers with ISO-certified
+                scalpels, forceps, retractors and scissors — tracked from sterilization
+                to your loading dock.
+            </p>
+            <div class="hero-actions">
+                <a asp-controller="Shop" asp-action="Index" class="btn btn-primary">Browse the catalog</a>
+                <a asp-controller="Shop" asp-action="Track" class="btn btn-ghost">Track an order</a>
+            </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+            <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="scalpelGrad" x1="0" y1="0" x2="320" y2="320" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#b84dff" />
+                        <stop offset="1" stop-color="#7b2ff7" />
+                    </linearGradient>
+                </defs>
+                <circle cx="160" cy="160" r="150" stroke="#262530" stroke-width="1" />
+                <circle cx="160" cy="160" r="110" stroke="#262530" stroke-width="1" />
+                <path d="M70 230 L190 110 C200 100 216 100 226 110 C236 120 236 136 226 146 L106 266 C96 276 80 276 70 266 C60 256 60 240 70 230 Z"
+                      stroke="url(#scalpelGrad)" stroke-width="2.5" fill="rgba(184,77,255,0.06)" />
+                <line x1="182" y1="118" x2="218" y2="154" stroke="url(#scalpelGrad)" stroke-width="2.5" />
+                <circle cx="226" cy="110" r="5" fill="#b84dff" />
+            </svg>
+        </div>
+    </div>
+</section>
+
+<section class="process">
+    <div class="container">
+        <h2>From sterilization to your operating room</h2>
+        <ol class="process-steps">
+            <li>
+                <span class="step-index">1</span>
+                <h3>Quality-checked stock</h3>
+                <p>Every batch clears an ISO sterilization audit before it's listed as available.</p>
+            </li>
+            <li>
+                <span class="step-index">2</span>
+                <h3>You order what you need</h3>
+                <p>Browse live inventory by category, set quantities, and submit an order in minutes.</p>
+            </li>
+            <li>
+                <span class="step-index">3</span>
+                <h3>Tracked shipment</h3>
+                <p>Watch your order move from processing to shipped, with a delivery window you can plan around.</p>
+            </li>
+        </ol>
+    </div>
+</section>
+
+<section class="categories">
+    <div class="container">
+        <div class="section-head">
+            <h2>What's in stock right now</h2>
+            <a asp-controller="Shop" asp-action="Index" class="see-all">Browse full catalog</a>
+        </div>
+        <div class="category-grid">
+            <article class="category-card">
+                <h3>Scalpels &amp; Blades</h3>
+                <p>Grade-A stainless steel</p>
+                <span class="qty">12,400 pcs</span>
+            </article>
+            <article class="category-card">
+                <h3>Hemostatic Forceps</h3>
+                <p>Titanium coated</p>
+                <span class="qty">8,150 pcs</span>
+            </article>
+            <article class="category-card">
+                <h3>Retractors &amp; Scissors</h3>
+                <p>Surgical grade</p>
+                <span class="qty">5,200 pcs</span>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="trust">
+    <div class="container trust-row">
+        <div>
+            <h2>Built for procurement teams, not just a storefront</h2>
+            <p>
+                Add instruments to a cart, place an order under your hospital's name,
+                then track it from processing to your loading dock — no phone calls required.
+            </p>
+            <a asp-controller="Shop" asp-action="Index" class="btn btn-primary">Start an order</a>
+        </div>
+        <ul class="trust-list">
+            <li>Order history by hospital name</li>
+            <li>Real-time shipment tracking by order number</li>
+            <li>Straightforward checkout, no account required</li>
+        </ul>
+    </div>
+</section>

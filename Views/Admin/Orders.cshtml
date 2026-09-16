@@ -1,0 +1,103 @@
+﻿@model List<SurgiTech.Models.Order>
+@{
+    Layout = null;
+    var statuses = ViewBag.AllowedStatuses as string[] ?? new[] { "Processing", "Shipped", "Delivered" };
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - SurgiTech Admin</title>
+    <link rel="stylesheet" href="~/css/dashboard.css">
+    <link rel="stylesheet" href="~/css/admin-extra.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i data-lucide="scissors"></i>
+                <span>SurgiTech</span>
+            </div>
+
+            <nav class="nav-menu">
+                <a asp-controller="Admin" asp-action="Dashboard" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a asp-controller="Admin" asp-action="Inventory" class="nav-item"><i data-lucide="box"></i> Inventory</a>
+                <a asp-controller="Admin" asp-action="Orders" class="nav-item active"><i data-lucide="shopping-cart"></i> Orders</a>
+                <a asp-controller="Shop" asp-action="Index" class="nav-item"><i data-lucide="store"></i> Client Shop</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="user-greeting">
+                    <h1>Orders</h1>
+                    <p>Update shipment status as orders move through processing</p>
+                </div>
+            </header>
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="mgmt-flash">@TempData["Message"]</div>
+            }
+
+            <div class="mgmt-header">
+                <h2>@Model.Count orders</h2>
+            </div>
+
+            <div class="mgmt-table-wrap">
+                <table class="mgmt-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Hospital / Clinic</th>
+                            <th>Placed</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>#ORD-@order.Id</td>
+                                <td>@order.HospitalName</td>
+                                <td>@order.OrderDate.ToString("MMM d, yyyy")</td>
+                                <td>@order.TotalAmount.ToString("C")</td>
+                                <td>
+                                    <form asp-action="UpdateOrderStatus" method="post" class="status-inline-form">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@order.Id" />
+                                        <select name="status" class="status-select" onchange="this.form.submit()">
+                                            @foreach (var s in statuses)
+                                            {
+                                                if (s == order.Status)
+                                                {
+                                                    <option value="@s" selected>@s</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@s">@s</option>
+                                                }
+                                            }
+                                        </select>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

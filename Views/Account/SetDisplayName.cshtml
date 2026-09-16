@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "Welcome";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SurgiTech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/shop.css" asp-append-version="true" />
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at 15% 15%, rgba(123, 47, 247, .12), transparent 45%), radial-gradient(circle at 85% 85%, rgba(184, 77, 255, .10), transparent 45%), var(--bg);
+            padding: 20px;
+        }
+
+        .setup-card {
+            width: 100%;
+            max-width: 380px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 36px 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .4);
+            text-align: center;
+        }
+
+            .setup-card h1 {
+                font-size: 21px;
+                margin: 0 0 8px;
+            }
+
+            .setup-card p.sub {
+                color: var(--text-dim);
+                font-size: 13px;
+                line-height: 1.5;
+                margin: 0 0 26px;
+            }
+
+        .login-error {
+            margin-bottom: 18px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(248, 113, 113, .12);
+            border: 1px solid rgba(248, 113, 113, .3);
+            color: var(--danger);
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .setup-card label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin: 0 0 6px;
+            text-align: left;
+        }
+
+        .setup-card input {
+            width: 100%;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 14px;
+            color: var(--text);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+            .setup-card input:focus {
+                outline: none;
+                border-color: #8b3ffb;
+            }
+
+        .setup-submit {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="setup-card">
+        <h1>Signed in &#127881;</h1>
+        <p class="sub">What should the dashboard call you?</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="login-error">@ViewBag.Error</div>
+        }
+
+        <form asp-controller="Account" asp-action="SetDisplayName" method="post">
+            @Html.AntiForgeryToken()
+            <label for="displayName">Display name</label>
+            <input type="text" id="displayName" name="displayName" placeholder="e.g. Ayesha" required autofocus />
+            <button type="submit" class="btn btn-primary setup-submit">Continue to dashboard</button>
+        </form>
+    </div>
+
+</body>
+</html>

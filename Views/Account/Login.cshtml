@@ -1,0 +1,177 @@
+﻿@{
+    bool isFirstTime = ViewBag.IsFirstTime ?? false;
+    ViewData["Title"] = isFirstTime ? "Create Admin Account" : "Admin Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SurgiTech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/shop.css" asp-append-version="true" />
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at 15% 15%, rgba(123, 47, 247, .12), transparent 45%), radial-gradient(circle at 85% 85%, rgba(184, 77, 255, .10), transparent 45%), var(--bg);
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 36px 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .4);
+        }
+
+        .login-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+            .login-brand .logo-mark {
+                width: 38px;
+                height: 38px;
+                border-radius: 11px;
+                background: var(--accent-grad);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+            }
+
+            .login-brand span {
+                font-weight: 800;
+                font-size: 17px;
+            }
+
+        .login-card h1 {
+            text-align: center;
+            font-size: 21px;
+            margin: 0 0 6px;
+        }
+
+        .login-card p.sub {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0 0 24px;
+        }
+
+        .login-error {
+            margin-bottom: 18px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(248, 113, 113, .12);
+            border: 1px solid rgba(248, 113, 113, .3);
+            color: var(--danger);
+            font-size: 13px;
+        }
+
+        .login-card label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin: 16px 0 6px;
+        }
+
+        .login-card input {
+            width: 100%;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 14px;
+            color: var(--text);
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color .15s ease;
+        }
+
+            .login-card input:focus {
+                outline: none;
+                border-color: #8b3ffb;
+            }
+
+        .login-submit {
+            width: 100%;
+            margin-top: 26px;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-faint);
+        }
+
+            .back-link:hover {
+                color: var(--text-dim);
+            }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="login-brand">
+            <span class="logo-mark">&#9986;</span>
+            <span>SurgiTech</span>
+        </div>
+
+        <h1>@(isFirstTime ? "Set up your admin account" : "Admin sign in")</h1>
+
+        @if (isFirstTime)
+        {
+            <p class="sub">First time here — choose the Gmail and password you'll use to access the dashboard going forward.</p>
+        }
+        else
+        {
+            <p class="sub">Sign in with your admin Gmail and password.</p>
+        }
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="login-error">@ViewBag.Error</div>
+        }
+
+        <form asp-controller="Account" asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+
+            <label for="email">Gmail address</label>
+            <input type="email" id="email" name="email" required autofocus />
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+
+            @if (isFirstTime)
+            {
+                <label for="displayName">What should we call you? (optional)</label>
+                <input type="text" id="displayName" name="displayName" placeholder="e.g. Ayesha" />
+            }
+
+            <button type="submit" class="btn btn-primary login-submit">
+                @(isFirstTime ? "Create account & sign in" : "Sign in")
+            </button>
+        </form>
+
+        <a asp-controller="Home" asp-action="Index" class="back-link">&larr; Back to site</a>
+    </div>
+
+</body>
+</html>

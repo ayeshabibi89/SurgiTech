@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SurgiTech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/shop.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-row">
+            <a class="logo" asp-controller="Shop" asp-action="Index">
+                <span class="logo-mark">&#9986;</span> SurgiTech
+            </a>
+            <nav class="site-nav">
+                <a asp-controller="Shop" asp-action="Index">Instruments</a>
+                <a asp-controller="Shop" asp-action="MyOrders">My Orders</a>
+                <a asp-controller="Shop" asp-action="Track">Track Order</a>
+            </nav>
+            <div class="header-actions">
+                <a asp-controller="Shop" asp-action="Cart" class="btn btn-ghost">
+                    Cart
+                    @{
+                        var cartCount = ViewBag.CartCount as int? ?? 0;
+                    }
+                    @if (cartCount > 0)
+                    {
+                        <span class="cart-badge">@cartCount</span>
+                    }
+                </a>
+                <a asp-controller="Shop" asp-action="Index" class="btn btn-primary">Order instruments</a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-ghost">Admin</a>
+            </div>
+        </div>
+    </header>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="container">
+            <div class="flash-message">@TempData["Message"]</div>
+        </div>
+    }
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-row">
+            <div>
+                <a class="logo" asp-controller="Shop" asp-action="Index"><span class="logo-mark">&#9986;</span> SurgiTech</a>
+                <p>Surgical instrument supply for hospitals and clinics.</p>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <a asp-controller="Shop" asp-action="Index">Instruments</a>
+                <a asp-controller="Shop" asp-action="MyOrders">My Orders</a>
+                <a asp-controller="Shop" asp-action="Track">Track Order</a>
+                <a asp-controller="Account" asp-action="Login">Admin Panel</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="mailto:orders@surgitech.example">orders@surgitech.example</a>
+                <a href="tel:+10000000000">+1 (000) 000-0000</a>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <span>&copy; 2026 SurgiTech. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="~/js/shop.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

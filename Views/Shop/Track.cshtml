@@ -1,0 +1,45 @@
+﻿@model SurgiTech.Models.Order
+@{
+    ViewData["Title"] = "Track Order";
+    Layout = "_ShopLayout";
+    var notFoundId = ViewBag.NotFoundId as int?;
+    var steps = new[] { "Processing", "Shipped", "Delivered" };
+    var currentIndex = Model != null ? Array.IndexOf(steps, Model.Status) : -1;
+    var fillPercent = currentIndex <= 0 ? 0 : (double)currentIndex / (steps.Length - 1) * 100;
+}
+
+<section class="catalog-section">
+    <div class="container">
+        <div class="panel-head">
+            <h2>Track an order</h2>
+        </div>
+
+        <div class="track-box">
+            <form asp-action="Track" method="get" class="track-input-row">
+                <input type="number" name="id" placeholder="Enter order number, e.g. 9821" value="@(Model?.Id)" class="text-input" />
+                <button type="submit" class="btn btn-primary">Track</button>
+            </form>
+
+            @if (notFoundId.HasValue)
+            {
+                <p class="empty-state">No order found with number #@notFoundId.</p>
+            }
+            else if (Model != null)
+            {
+                <div class="track-progress">
+                    <div class="fill" style="width:@(fillPercent)%"></div>
+                    @for (int i = 0; i < steps.Length; i++)
+                    {
+                        <div class="track-step @(i <= currentIndex ? "done" : "")">
+                            <span class="dot"></span>
+                            <span>@steps[i]</span>
+                        </div>
+                    }
+                </div>
+                <div class="track-meta">
+                    #@Model.Id &middot; @Model.HospitalName &middot; @Model.TotalAmount.ToString("C") &middot; placed @Model.OrderDate.ToString("MMM d, yyyy")
+                </div>
+            }
+        </div>
+    </div>
+</section>
