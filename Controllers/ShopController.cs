@@ -79,8 +79,9 @@ namespace SurgiTech.Controllers
         }
 
         // GET: /Shop/Cart
-        public IActionResult Cart()
+        public async Task<IActionResult> Cart()
         {
+            ViewBag.ShippingFee = await GetShippingFeeAsync();
             return View(GetCart());
         }
 
@@ -129,10 +130,12 @@ namespace SurgiTech.Controllers
                 return RedirectToAction(nameof(Cart));
             }
 
+            var shippingFee = await GetShippingFeeAsync();
+
             var order = new Order
             {
                 HospitalName = hospitalName.Trim(),
-                TotalAmount = cart.Sum(c => c.LineTotal),
+                TotalAmount = cart.Sum(c => c.LineTotal) + shippingFee,
                 Status = "Processing",
                 OrderDate = DateTime.Now
             };
@@ -196,6 +199,12 @@ namespace SurgiTech.Controllers
         private void SaveCart(List<CartItem> cart)
         {
             HttpContext.Session.SetObject(CartSessionKey, cart);
+        }
+
+        private async Task<decimal> GetShippingFeeAsync()
+        {
+            var settings = await _context.ShopSettings.FirstOrDefaultAsync();
+            return settings?.ShippingFee ?? 25.00m;
         }
     }
 }

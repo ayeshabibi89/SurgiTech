@@ -1,7 +1,6 @@
-﻿@model List<SurgiTech.Models.Order>
+﻿@model SurgiTech.Controllers.OrderReportViewModel
 @{
     Layout = null;
-    var statuses = ViewBag.AllowedStatuses as string[] ?? new[] { "Processing", "Shipped", "Delivered" };
 }
 
 <!DOCTYPE html>
@@ -9,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders - SurgiTech Admin</title>
+    <title>Reports - SurgiTech Admin</title>
     <link rel="stylesheet" href="~/css/dashboard.css">
     <link rel="stylesheet" href="~/css/admin-extra.css">
     <link rel="stylesheet" href="~/css/dashboard-mobile.css" asp-append-version="true">
@@ -29,8 +28,8 @@
             <nav class="nav-menu">
                 <a asp-controller="Admin" asp-action="Dashboard" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
                 <a asp-controller="Admin" asp-action="Inventory" class="nav-item"><i data-lucide="box"></i> Inventory</a>
-                <a asp-controller="Admin" asp-action="Orders" class="nav-item active"><i data-lucide="shopping-cart"></i> Orders</a>
-                <a asp-controller="Admin" asp-action="Reports" class="nav-item"><i data-lucide="file-text"></i> Reports</a>
+                <a asp-controller="Admin" asp-action="Orders" class="nav-item"><i data-lucide="shopping-cart"></i> Orders</a>
+                <a asp-controller="Admin" asp-action="Reports" class="nav-item active"><i data-lucide="file-text"></i> Reports</a>
                 <a asp-controller="Shop" asp-action="Index" class="nav-item"><i data-lucide="store"></i> Client Shop</a>
             </nav>
 
@@ -51,18 +50,36 @@
                     <i data-lucide="menu"></i>
                 </button>
                 <div class="user-greeting">
-                    <h1>Orders</h1>
-                    <p>Update shipment status as orders move through processing</p>
+                    <h1>Order Status Report</h1>
+                    <p>@Model.TotalOrders total orders &middot; @Model.TotalRevenue.ToString("C") total revenue</p>
+                </div>
+                <div class="header-actions">
+                    <a asp-action="ExportOrdersCsv" class="btn-save">
+                        <i data-lucide="download"></i> Download CSV
+                    </a>
                 </div>
             </header>
 
-            @if (TempData["Message"] != null)
-            {
-                <div class="mgmt-flash">@TempData["Message"]</div>
-            }
+            <div class="report-summary-grid">
+                @foreach (var s in Model.Summary)
+                {
+                    var badgeClass = s.Status switch
+                    {
+                        "Shipped" or "Delivered" => "badge-ok",
+                        "Processing" => "badge-warn",
+                        _ => "badge-info"
+                    };
+                    <div class="report-summary-card">
+                        <span class="badge @badgeClass">@s.Status</span>
+                        <div class="report-summary-count">@s.Count</div>
+                        <div class="report-summary-label">order@(s.Count == 1 ? "" : "s")</div>
+                        <div class="report-summary-total">@s.Total.ToString("C")</div>
+                    </div>
+                }
+            </div>
 
             <div class="mgmt-header">
-                <h2>@Model.Count orders</h2>
+                <h2>All orders</h2>
             </div>
 
             <div class="mgmt-table-wrap">
@@ -77,32 +94,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var order in Model)
+                        @foreach (var order in Model.Orders)
                         {
+                            var badgeClass = order.Status switch
+                            {
+                                "Shipped" or "Delivered" => "badge-ok",
+                                "Processing" => "badge-warn",
+                                _ => "badge-info"
+                            };
                             <tr>
                                 <td data-label="Order">#ORD-@order.Id</td>
                                 <td data-label="Hospital / Clinic">@order.HospitalName</td>
                                 <td data-label="Placed">@order.OrderDate.ToString("MMM d, yyyy")</td>
                                 <td data-label="Total">@order.TotalAmount.ToString("C")</td>
-                                <td data-label="Status">
-                                    <form asp-action="UpdateOrderStatus" method="post" class="status-inline-form">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="id" value="@order.Id" />
-                                        <select name="status" class="status-select" onchange="this.form.submit()">
-                                            @foreach (var s in statuses)
-                                            {
-                                                if (s == order.Status)
-                                                {
-                                                    <option value="@s" selected>@s</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@s">@s</option>
-                                                }
-                                            }
-                                        </select>
-                                    </form>
-                                </td>
+                                <td data-label="Status"><span class="badge @badgeClass">@order.Status</span></td>
                             </tr>
                         }
                     </tbody>
@@ -110,6 +115,7 @@
             </div>
         </main>
     </div>
+
     <script src="~/js/dashboard-mobile.js" asp-append-version="true"></script>
     <script>lucide.createIcons();</script>
 </body>

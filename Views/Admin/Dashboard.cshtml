@@ -10,9 +10,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - SurgiTech</title>
     <link rel="stylesheet" href="~/css/dashboard.css">
+    <link rel="stylesheet" href="~/css/dashboard-mobile.css" asp-append-version="true">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
+
+    <div class="sidebar-overlay"></div>
 
     <div class="dashboard-container">
         <!-- LEFT SIDEBAR -->
@@ -26,6 +29,7 @@
                 <a asp-controller="Admin" asp-action="Dashboard" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
                 <a asp-controller="Admin" asp-action="Inventory" class="nav-item"><i data-lucide="box"></i> Inventory</a>
                 <a asp-controller="Admin" asp-action="Orders" class="nav-item"><i data-lucide="shopping-cart"></i> Orders</a>
+                <a asp-controller="Admin" asp-action="Reports" class="nav-item"><i data-lucide="file-text"></i> Reports</a>
                 <a asp-controller="Shop" asp-action="Index" class="nav-item"><i data-lucide="store"></i> Client Shop</a>
             </nav>
 
@@ -43,15 +47,18 @@
         <!-- MAIN CONTENT AREA -->
         <main class="main-content">
             <header class="top-header">
+                <button class="mobile-menu-btn" aria-label="Open menu">
+                    <i data-lucide="menu"></i>
+                </button>
                 <div class="user-greeting">
                     <h1>Welcome, @ViewBag.DisplayName</h1>
                     <p>Here's your surgical inventory and distribution overview</p>
                 </div>
                 <div class="header-actions">
-                    <div class="search-bar">
+                    <form asp-controller="Admin" asp-action="Inventory" method="get" class="search-bar">
                         <i data-lucide="search"></i>
-                        <input type="text" placeholder="Search instruments...">
-                    </div>
+                        <input type="text" name="search" placeholder="Search instruments...">
+                    </form>
                     <div class="user-profile">
                         <span>Admin User</span>
                     </div>
@@ -59,8 +66,8 @@
             </header>
 
             <div class="tab-pills">
-                <button class="pill active">Inventory</button>
-                <button class="pill">Orders</button>
+                <a asp-controller="Admin" asp-action="Inventory" class="pill active">Inventory</a>
+                <a asp-controller="Admin" asp-action="Orders" class="pill active">Orders</a>
             </div>
 
             <div class="dashboard-grid">
@@ -78,7 +85,7 @@
                             <h4>Quality Audit Alert</h4>
                             <p>Batch #402 ready for ISO Sterilization Audit</p>
                         </div>
-                        <button class="btn-primary">View Report</button>
+                        <a asp-controller="Admin" asp-action="Reports" class="btn-primary" style="text-decoration:none; display:inline-block; text-align:center;">View Report</a>
                     </div>
                 </div>
 
@@ -144,6 +151,7 @@
         </main>
     </div>
 
+    <script src="~/js/dashboard-mobile.js" asp-append-version="true"></script>
     <script>lucide.createIcons();</script>
 </body>
 </html>

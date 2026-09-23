@@ -1,6 +1,7 @@
 ﻿@model List<SurgiTech.Models.SurgicalInstrument>
 @{
     Layout = null;
+    var searchTerm = ViewBag.SearchTerm as string;
 }
 
 <!DOCTYPE html>
@@ -11,9 +12,12 @@
     <title>Inventory - SurgiTech Admin</title>
     <link rel="stylesheet" href="~/css/dashboard.css">
     <link rel="stylesheet" href="~/css/admin-extra.css">
+    <link rel="stylesheet" href="~/css/dashboard-mobile.css" asp-append-version="true">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
+
+    <div class="sidebar-overlay"></div>
 
     <div class="dashboard-container">
         <aside class="sidebar">
@@ -26,21 +30,35 @@
                 <a asp-controller="Admin" asp-action="Dashboard" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
                 <a asp-controller="Admin" asp-action="Inventory" class="nav-item active"><i data-lucide="box"></i> Inventory</a>
                 <a asp-controller="Admin" asp-action="Orders" class="nav-item"><i data-lucide="shopping-cart"></i> Orders</a>
+                <a asp-controller="Admin" asp-action="Reports" class="nav-item"><i data-lucide="file-text"></i> Reports</a>
                 <a asp-controller="Shop" asp-action="Index" class="nav-item"><i data-lucide="store"></i> Client Shop</a>
             </nav>
 
             <div class="sidebar-footer">
-                <a href="#" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+                <a asp-controller="Admin" asp-action="Settings" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+                <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="nav-item" style="width:100%; border:none; background:none; cursor:pointer;">
+                        <i data-lucide="log-out"></i> Log out
+                    </button>
+                </form>
             </div>
         </aside>
 
         <main class="main-content">
             <header class="top-header">
+                <button class="mobile-menu-btn" aria-label="Open menu">
+                    <i data-lucide="menu"></i>
+                </button>
                 <div class="user-greeting">
                     <h1>Inventory</h1>
                     <p>Edit stock levels, pricing and details for every instrument</p>
                 </div>
                 <div class="header-actions">
+                    <form asp-controller="Admin" asp-action="Inventory" method="get" class="search-bar">
+                        <i data-lucide="search"></i>
+                        <input type="text" name="search" placeholder="Search instruments..." value="@searchTerm" />
+                    </form>
                     <div class="user-profile">
                         <span>Admin User</span>
                     </div>
@@ -53,41 +71,62 @@
             }
 
             <div class="mgmt-header">
-                <h2>@Model.Count instruments</h2>
+                <h2>
+                    @Model.Count instrument@(Model.Count == 1 ? "" : "s")
+                    @if (!string.IsNullOrWhiteSpace(searchTerm))
+                    {
+                        <span class="text-dim">matching "@searchTerm"</span>
+                        <a asp-action="Inventory" class="see-all">Clear</a>
+                    }
+                </h2>
+                <a asp-action="AddInstrument" class="btn-primary" style="text-decoration:none; display:inline-block;">+ Add Instrument</a>
             </div>
 
-            <div class="mgmt-table-wrap">
-                <table class="mgmt-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Material</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
+            @if (!Model.Any())
+            {
+                <p class="empty-state">No instruments match "@searchTerm".</p>
+            }
+            else
+            {
+                <div class="mgmt-table-wrap">
+                    <table class="mgmt-table">
+                        <thead>
                             <tr>
-                                <td>@item.Name</td>
-                                <td>@item.Category</td>
-                                <td>@item.MaterialGrade</td>
-                                <td>@item.UnitPrice.ToString("C")</td>
-                                <td>@item.StockQuantity.ToString("N0") pcs</td>
-                                <td class="mgmt-actions">
-                                    <a asp-action="EditInstrument" asp-route-id="@item.Id" class="btn-edit">Edit</a>
-                                </td>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Material</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td data-label="Photo">
+                                        <img class="mgmt-thumb" src="@item.ImageUrl" alt="@item.Name"
+                                             onerror="this.onerror=null;this.src='/images/default-instrument.jpg';" />
+                                    </td>
+                                    <td data-label="Name">@item.Name</td>
+                                    <td data-label="Category">@item.Category</td>
+                                    <td data-label="Material">@item.MaterialGrade</td>
+                                    <td data-label="Price">@item.UnitPrice.ToString("C")</td>
+                                    <td data-label="Stock">@item.StockQuantity.ToString("N0") pcs</td>
+                                    <td class="mgmt-actions">
+                                        <a asp-action="EditInstrument" asp-route-id="@item.Id" class="btn-edit">Edit</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
         </main>
     </div>
 
+    <script src="~/js/dashboard-mobile.js" asp-append-version="true"></script>
     <script>lucide.createIcons();</script>
 </body>
 </html>

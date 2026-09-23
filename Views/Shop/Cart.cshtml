@@ -3,7 +3,7 @@
     ViewData["Title"] = "Your Cart";
     Layout = "_ShopLayout";
     var subtotal = Model.Sum(c => c.LineTotal);
-    var shipping = subtotal > 0 ? 25m : 0m;
+    var shipping = subtotal > 0 ? (decimal)(ViewBag.ShippingFee ?? 25m) : 0m;
 }
 
 <section class="catalog-section">

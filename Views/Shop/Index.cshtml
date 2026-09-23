@@ -29,6 +29,8 @@
                 @foreach (var item in Model)
                 {
                     <article class="product-card">
+                        <img src="@item.ImageUrl" alt="@item.Name"
+                             onerror="this.onerror=null;this.src='/images/default-instrument.jpg';" />
                         <span class="category-tag">@item.Category</span>
                         <h3>@item.Name</h3>
                         <p class="desc">@item.MaterialGrade</p>

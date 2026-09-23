@@ -10,6 +10,7 @@ namespace SurgiTech.Data
 
         public DbSet<SurgicalInstrument> Instruments { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<ShopSettings> ShopSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

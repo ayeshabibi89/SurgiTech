@@ -1,0 +1,148 @@
+﻿@model SurgiTech.Controllers.SettingsViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - SurgiTech Admin</title>
+    <link rel="stylesheet" href="~/css/dashboard.css">
+    <link rel="stylesheet" href="~/css/admin-extra.css">
+    <link rel="stylesheet" href="~/css/dashboard-mobile.css" asp-append-version="true">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="sidebar-overlay"></div>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i data-lucide="scissors"></i>
+                <span>SurgiTech</span>
+            </div>
+
+            <nav class="nav-menu">
+                <a asp-controller="Admin" asp-action="Dashboard" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a asp-controller="Admin" asp-action="Inventory" class="nav-item"><i data-lucide="box"></i> Inventory</a>
+                <a asp-controller="Admin" asp-action="Orders" class="nav-item"><i data-lucide="shopping-cart"></i> Orders</a>
+                <a asp-controller="Admin" asp-action="Reports" class="nav-item"><i data-lucide="file-text"></i> Reports</a>
+                <a asp-controller="Shop" asp-action="Index" class="nav-item"><i data-lucide="store"></i> Client Shop</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a asp-controller="Admin" asp-action="Settings" class="nav-item active"><i data-lucide="settings"></i> Settings</a>
+                <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="nav-item" style="width:100%; border:none; background:none; cursor:pointer;">
+                        <i data-lucide="log-out"></i> Log out
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <button class="mobile-menu-btn" aria-label="Open menu">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="user-greeting">
+                    <h1>Settings</h1>
+                    <p>Your login, profile, and shop-wide info</p>
+                </div>
+            </header>
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="mgmt-flash">@TempData["Message"]</div>
+            }
+
+            <div class="settings-grid">
+
+                <!-- Profile -->
+                <section class="mgmt-form-card settings-card">
+                    <h3>Profile</h3>
+                    <p class="settings-desc">What the dashboard calls you.</p>
+
+                    @if (TempData["ProfileError"] != null)
+                    {
+                        <div class="mgmt-flash settings-error">@TempData["ProfileError"]</div>
+                    }
+
+                    <form asp-controller="Admin" asp-action="UpdateProfile" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <label for="displayName">Display name</label>
+                        <input type="text" id="displayName" name="displayName" value="@Model.DisplayName" required />
+
+                        <label for="email">Email (also your login)</label>
+                        <input type="email" id="email" name="email" value="@Model.Email" required />
+
+                        <div class="mgmt-form-actions">
+                            <button type="submit" class="btn-save">Save profile</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Password -->
+                <section class="mgmt-form-card settings-card">
+                    <h3>Password</h3>
+                    <p class="settings-desc">Change your admin login password.</p>
+
+                    @if (TempData["PasswordError"] != null)
+                    {
+                        <div class="mgmt-flash settings-error">@TempData["PasswordError"]</div>
+                    }
+
+                    <form asp-controller="Admin" asp-action="ChangePassword" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <label for="currentPassword">Current password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" required />
+
+                        <label for="newPassword">New password</label>
+                        <input type="password" id="newPassword" name="newPassword" required minlength="4" />
+
+                        <label for="confirmPassword">Confirm new password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required minlength="4" />
+
+                        <div class="mgmt-form-actions">
+                            <button type="submit" class="btn-save">Change password</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Shop info -->
+                <section class="mgmt-form-card settings-card settings-card-wide">
+                    <h3>Shop info</h3>
+                    <p class="settings-desc">Used across the site: the footer WhatsApp/contact links and the shipping fee charged at checkout.</p>
+
+                    <form asp-controller="Admin" asp-action="UpdateShopSettings" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <label for="whatsAppNumber">WhatsApp number (digits only, with country code, no + or spaces)</label>
+                        <input type="text" id="whatsAppNumber" name="whatsAppNumber" value="@Model.WhatsAppNumber" placeholder="923001234567" />
+
+                        <label for="contactEmail">Contact email</label>
+                        <input type="email" id="contactEmail" name="contactEmail" value="@Model.ContactEmail" />
+
+                        <label for="shippingFee">Shipping fee (charged on every order)</label>
+                        <input type="number" id="shippingFee" name="shippingFee" value="@Model.ShippingFee" step="0.01" min="0" />
+
+                        <div class="mgmt-form-actions">
+                            <button type="submit" class="btn-save">Save shop info</button>
+                        </div>
+                    </form>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="~/js/dashboard-mobile.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

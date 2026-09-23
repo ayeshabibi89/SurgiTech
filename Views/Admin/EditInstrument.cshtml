@@ -26,11 +26,12 @@
                 <a asp-controller="Admin" asp-action="Dashboard" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
                 <a asp-controller="Admin" asp-action="Inventory" class="nav-item active"><i data-lucide="box"></i> Inventory</a>
                 <a asp-controller="Admin" asp-action="Orders" class="nav-item"><i data-lucide="shopping-cart"></i> Orders</a>
+                <a asp-controller="Admin" asp-action="Reports" class="nav-item"><i data-lucide="file-text"></i> Reports</a>
                 <a asp-controller="Shop" asp-action="Index" class="nav-item"><i data-lucide="store"></i> Client Shop</a>
             </nav>
 
             <div class="sidebar-footer">
-                <a href="#" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+                <a asp-controller="Admin" asp-action="Settings" class="nav-item"><i data-lucide="settings"></i> Settings</a>
             </div>
         </aside>
 
@@ -73,7 +74,7 @@
             </div>
         </main>
     </div>
-
+    <script src="~/js/dashboard-mobile.js" asp-append-version="true"></script>
     <script>lucide.createIcons();</script>
 </body>
 </html>

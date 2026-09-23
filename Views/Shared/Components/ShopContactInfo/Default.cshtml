@@ -1,0 +1,7 @@
+﻿@model SurgiTech.Models.ShopSettings
+
+<a href="mailto:@Model.ContactEmail">@Model.ContactEmail</a>
+@if (!string.IsNullOrWhiteSpace(Model.WhatsAppNumber))
+{
+    <a href="https://wa.me/@Model.WhatsAppNumber" target="_blank" rel="noopener">WhatsApp</a>
+}
