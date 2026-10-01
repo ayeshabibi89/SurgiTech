@@ -8,9 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Register DbContext with Npgsql (PostgreSQL)
+// Register DbContext with Npgsql (PostgreSQL) and ignore PendingModelChangesWarning for EF Core 9
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
 
 // Register Session Services
 builder.Services.AddDistributedMemoryCache();
