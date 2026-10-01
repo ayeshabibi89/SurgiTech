@@ -55,7 +55,7 @@ namespace SurgiTech.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     HospitalName = table.Column<string>(type: "text", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false)
                 },
@@ -94,8 +94,8 @@ namespace SurgiTech.Migrations
                 columns: new[] { "Id", "HospitalName", "OrderDate", "Status", "TotalAmount" },
                 values: new object[,]
                 {
-                    { 9821, "City Hospital Care", new DateTime(2026, 9, 30, 11, 17, 39, 814, DateTimeKind.Local).AddTicks(375), "Shipped", 14250.00m },
-                    { 9822, "St. Jude Clinic", new DateTime(2026, 10, 1, 11, 17, 39, 814, DateTimeKind.Local).AddTicks(1276), "Processing", 8900.00m }
+                    { 9821, "City Hospital Care", new DateTime(2026, 9, 30, 11, 26, 47, 699, DateTimeKind.Local).AddTicks(7876), "Shipped", 14250.00m },
+                    { 9822, "St. Jude Clinic", new DateTime(2026, 10, 1, 11, 26, 47, 702, DateTimeKind.Local).AddTicks(6246), "Processing", 8900.00m }
                 });
         }
 

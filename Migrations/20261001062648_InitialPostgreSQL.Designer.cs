@@ -12,7 +12,7 @@ using SurgiTech.Data;
 namespace SurgiTech.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261001061746_InitialPostgreSQL")]
+    [Migration("20261001062648_InitialPostgreSQL")]
     partial class InitialPostgreSQL
     {
         /// <inheritdoc />
@@ -66,7 +66,7 @@ namespace SurgiTech.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("OrderDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -84,7 +84,7 @@ namespace SurgiTech.Migrations
                         {
                             Id = 9821,
                             HospitalName = "City Hospital Care",
-                            OrderDate = new DateTime(2026, 9, 30, 11, 17, 39, 814, DateTimeKind.Local).AddTicks(375),
+                            OrderDate = new DateTime(2026, 9, 30, 11, 26, 47, 699, DateTimeKind.Local).AddTicks(7876),
                             Status = "Shipped",
                             TotalAmount = 14250.00m
                         },
@@ -92,7 +92,7 @@ namespace SurgiTech.Migrations
                         {
                             Id = 9822,
                             HospitalName = "St. Jude Clinic",
-                            OrderDate = new DateTime(2026, 10, 1, 11, 17, 39, 814, DateTimeKind.Local).AddTicks(1276),
+                            OrderDate = new DateTime(2026, 10, 1, 11, 26, 47, 702, DateTimeKind.Local).AddTicks(6246),
                             Status = "Processing",
                             TotalAmount = 8900.00m
                         });
